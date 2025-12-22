@@ -49,9 +49,9 @@ namespace Pacovallet.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteCategory(Guid id)
+        public async Task<IActionResult> DeleteCategory(Guid id)
         {
-            _service.DeleteCategoryAsync(id);
+            await _service.DeleteCategoryAsync(id);
             return NoContent();
         }
     }
