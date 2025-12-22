@@ -76,6 +76,53 @@ export const transactionService = {
     return response.json();
   },
 
+  async createCategory(description: string, purpose: 'Income' | 'Expense' | 'Both'): Promise<Category> {
+    const response = await fetch(API_ENDPOINTS.CATEGORIES, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({
+        description,
+        purpose,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Erro ao criar categoria');
+    }
+
+    return response.json();
+  },
+
+  async updateCategory(id: string, description: string, purpose: 'Income' | 'Expense' | 'Both'): Promise<void> {
+    const response = await fetch(API_ENDPOINTS.CATEGORIES, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({
+        id,
+        description,
+        purpose,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Erro ao atualizar categoria');
+    }
+  },
+
+  async deleteCategory(categoryId: string): Promise<void> {
+    const response = await fetch(`${API_ENDPOINTS.CATEGORIES}/${categoryId}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Erro ao excluir categoria');
+    }
+  },
+
   async getTransactions(filters: TransactionFilters): Promise<Transaction[]> {
     const params = new URLSearchParams();
 

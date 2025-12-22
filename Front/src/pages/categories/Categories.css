@@ -4,15 +4,128 @@
   margin: 0 auto;
 }
 
-.categories-container h1 {
+.categories-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.categories-header h1 {
   color: #374151;
   font-size: 28px;
   font-weight: 600;
-  margin: 0 0 16px 0;
+  margin: 0;
 }
 
-.categories-container p {
+.create-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.create-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.create-button:active {
+  transform: translateY(0);
+}
+
+.loading,
+.no-data {
+  text-align: center;
+  padding: 40px;
   color: #6b7280;
   font-size: 16px;
+}
+
+.table-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.categories-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.categories-table thead {
+  background-color: #f9fafb;
+}
+
+.categories-table th {
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  font-size: 14px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.categories-table td {
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.categories-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.purpose-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.purpose-badge.income {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.purpose-badge.expense {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.purpose-badge.both {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.action-button.edit:hover {
+  background: #dbeafe;
+}
+
+.action-button.delete:hover {
+  background: #fee2e2;
 }
 
