@@ -16,6 +16,53 @@ export const transactionService = {
     return response.json();
   },
 
+  async createPerson(name: string, birthDate: Date): Promise<Person> {
+    const response = await fetch(API_ENDPOINTS.PERSONS, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({
+        name,
+        birthDate: birthDate.toISOString(),
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Erro ao criar pessoa');
+    }
+
+    return response.json();
+  },
+
+  async updatePerson(id: string, name: string, birthDate: Date): Promise<void> {
+    const response = await fetch(API_ENDPOINTS.PERSONS, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({
+        id,
+        name,
+        birthDate: birthDate.toISOString(),
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Erro ao atualizar pessoa');
+    }
+  },
+
+  async deletePerson(personId: string): Promise<void> {
+    const response = await fetch(`${API_ENDPOINTS.PERSONS}/${personId}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Erro ao excluir pessoa');
+    }
+  },
+
   async getCategories(): Promise<Category[]> {
     const response = await fetch(API_ENDPOINTS.CATEGORIES, {
       method: 'GET',

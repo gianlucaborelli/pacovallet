@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -13,7 +12,6 @@ interface SelectOption {
 }
 
 const Home: React.FC = () => {
-  const { user, logout } = useAuth();
 
   const [persons, setPersons] = useState<Person[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -145,17 +143,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="home-container">
-      <header className="home-header">
-        <h1>PacoVallet - Dashboard Financeiro</h1>
-        <div className="user-info">
-          <span>Olá, {user?.name}!</span>
-          <button onClick={logout} className="logout-button">
-            Sair
-          </button>
-        </div>
-      </header>
-
-      <main className="home-content">
+      <div className="home-content">
         <div className="filters-section">
           <h2>Filtros</h2>
           <div className="filters-grid">
@@ -285,7 +273,7 @@ const Home: React.FC = () => {
             </div>
           )}
         </div>
-      </main>
+      </div>
     </div>
   );
 };

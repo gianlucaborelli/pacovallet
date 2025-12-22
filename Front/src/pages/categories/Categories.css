@@ -1,0 +1,18 @@
+.categories-container {
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.categories-container h1 {
+  color: #374151;
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+}
+
+.categories-container p {
+  color: #6b7280;
+  font-size: 16px;
+}
+
