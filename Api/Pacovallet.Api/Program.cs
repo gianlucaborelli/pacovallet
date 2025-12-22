@@ -1,6 +1,7 @@
 using Pacovallet.Api.Configurations;
 using Pacovallet.Api.Models;
 using Pacovallet.Api.Services;
+using Pacovallet.Core.Extensions;
 using System.Text.Json.Serialization;
 using static Pacovallet.Api.Configurations.SwaggerConfig;
 
@@ -30,7 +31,10 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services
-    .AddControllers()
+    .AddControllers(options =>
+    {
+        options.ModelBinderProviders.Insert(0, new DateTimeCustomConverterForModelBinderProvider());
+    })
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(

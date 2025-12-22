@@ -1,4 +1,5 @@
-﻿using Pacovallet.Api.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Pacovallet.Api.Data;
 using Pacovallet.Api.Models;
 using Pacovallet.Api.Models.Dto;
 using Pacovallet.Core.Controller;
@@ -50,7 +51,8 @@ namespace Pacovallet.Api.Services
                     request.Amount,
                     request.Type,
                     category.Id,
-                    person.Id
+                    person.Id,
+                    request.OccurredAt
                 );
 
             if (!transaction.IsValid(person, category, out var error))
@@ -68,7 +70,8 @@ namespace Pacovallet.Api.Services
                 Amount = transaction.Amount,
                 Type = transaction.Type,
                 CategoryId = transaction.CategoryId,
-                PersonId = transaction.PersonId
+                PersonId = transaction.PersonId,
+                OccurredAt = transaction.OccurredAt
             };
 
             return ServiceResponse<TransactionDto>
@@ -127,6 +130,58 @@ namespace Pacovallet.Api.Services
             }
         }
 
-        
+        public async Task<ServiceResponse<List<TransactionDto>>> GetByFilter(FindTransactionsQuery query)
+        {
+            var filteredTransactions = _context.Transactions
+                                            .AsNoTracking()
+                                            .AsQueryable();
+
+            if (query.InitialDate.HasValue)
+            {
+                var initialUtc = DateTime.SpecifyKind(
+                    query.InitialDate.Value,
+                    DateTimeKind.Utc);
+
+                filteredTransactions = filteredTransactions
+                    .Where(t => t.OccurredAt >= initialUtc);
+            }
+
+            if (query.FinalDate.HasValue)
+            {
+                var finalUtc = DateTime.SpecifyKind(
+                    query.FinalDate.Value,
+                    DateTimeKind.Utc);
+
+                filteredTransactions = filteredTransactions
+                    .Where(t => t.OccurredAt <= finalUtc);
+            }
+
+            if (query.TransactionType.HasValue)
+                filteredTransactions = filteredTransactions
+                    .Where(t => t.Type == query.TransactionType.Value);
+
+            if (query.PersonsId != null && query.PersonsId.Any())
+                filteredTransactions = filteredTransactions
+                    .Where(t => query.PersonsId.Contains(t.PersonId));
+
+            if (query.CategoryId != null && query.CategoryId.Any())
+                filteredTransactions = filteredTransactions
+                    .Where(t => query.CategoryId.Contains(t.CategoryId));
+
+            var transactions = await filteredTransactions.ToListAsync();
+
+            return ServiceResponse<List<TransactionDto>>
+                .Ok([.. transactions.Select(t => new TransactionDto
+                {
+                    Id = t.Id,
+                    Description = t.Description,
+                    Amount = t.Amount,
+                    OccurredAt = t.OccurredAt,
+                    Type = t.Type,
+                    CategoryId = t.CategoryId,
+                    PersonId = t.PersonId
+                })],
+                "Filtered transactions retrieved successfully");
+        }
     }
 }

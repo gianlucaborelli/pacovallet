@@ -26,7 +26,8 @@ public class Transaction : Entity
     decimal amount,
     TransactionTypeEnum type,
     Guid categoryId,
-    Guid personId
+    Guid personId,
+    DateTime? occurredAt = null 
 )
     {
         Description = description;
@@ -34,6 +35,10 @@ public class Transaction : Entity
         Type = type;
         CategoryId = categoryId;
         PersonId = personId;
+        if (occurredAt.HasValue)
+            OccurredAt = DateTime.SpecifyKind(occurredAt.Value, DateTimeKind.Utc);
+        else
+            OccurredAt = DateTime.UtcNow;
     }
 
 
