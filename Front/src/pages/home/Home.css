@@ -61,7 +61,6 @@
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-
 .balance-section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -361,4 +360,80 @@
   background: white;
   border-radius: 6px;
   overflow: hidden;
+}
+
+/* Estilos para tabela com agrupamentos expansíveis */
+.group-row {
+  background-color: #f8fafc;
+  cursor: pointer;
+  border-bottom: 2px solid #e5e7eb !important;
+  font-weight: 600;
+}
+
+.group-row td {
+  padding: 16px 12px;
+  vertical-align: middle;
+}
+
+.group-row:hover {
+  background-color: #f1f5f9 !important;
+}
+
+.expand-button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.expand-button:hover {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+.transaction-row {
+  background-color: #ffffff;
+}
+
+.transaction-row:hover {
+  background-color: #f9fafb !important;
+}
+
+.transaction-details {
+  padding-left: 16px;
+}
+
+.transaction-details .description {
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 4px;
+}
+
+.transaction-details .meta-info {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.transaction-details .date {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.transaction-details .category,
+.transaction-details .person {
+  color: #6b7280;
+  font-size: 12px;
+  background-color: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.transaction-row .actions {
+  justify-content: flex-end;
 }

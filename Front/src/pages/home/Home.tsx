@@ -24,6 +24,7 @@ const Home: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [groupBy, setGroupBy] = useState<'none' | 'person' | 'category'>('none');
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
 
   // Filtros
   const [selectedPersons, setSelectedPersons] = useState<SelectOption[]>([]);
@@ -199,6 +200,19 @@ const Home: React.FC = () => {
 
   const groupedData = getGroupedData();
 
+  // Alternar expansão de grupo
+  const toggleGroupExpansion = (groupKey: string) => {
+    setExpandedGroups(prev => ({
+      ...prev,
+      [groupKey]: !prev[groupKey]
+    }));
+  };
+
+  // Resetar grupos expandidos quando mudar o tipo de agrupamento
+  useEffect(() => {
+    setExpandedGroups({});
+  }, [groupBy]);
+
   const groupByOptions: SelectOption[] = [
     { value: 'none', label: 'Geral' },
     { value: 'person', label: 'Por Pessoa' },
@@ -351,85 +365,87 @@ const Home: React.FC = () => {
           ) : transactions.length === 0 ? (
             <div className="no-data">Nenhuma transação encontrada</div>
           ) : groupBy !== 'none' && groupedData ? (
-            <div className="grouped-transactions">
-              {groupedData.map((group) => (
-                <div key={group.key} className="group-card">
-                  <div className="group-header">
-                    <h3>{group.label}</h3>
-                    <div className="group-totals">
-                      <div className="group-total-item">
-                        <span className="group-total-label">Receita:</span>
-                        <span className="group-total-value income">{formatCurrency(group.income)}</span>
-                      </div>
-                      <div className="group-total-item">
-                        <span className="group-total-label">Despesa:</span>
-                        <span className="group-total-value expense">{formatCurrency(group.expense)}</span>
-                      </div>
-                      <div className="group-total-item">
-                        <span className="group-total-label">Balanço:</span>
-                        <span className={`group-total-value ${group.balance >= 0 ? 'positive' : 'negative'}`}>
-                          {formatCurrency(group.balance)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="table-container">
-                    <table className="transactions-table">
-                      <thead>
-                        <tr>
-                          <th>Descrição</th>
-                          <th>Valor</th>
-                          <th>Tipo</th>
-                          <th>Data</th>
-                          {groupBy === 'person' && <th>Categoria</th>}
-                          {groupBy === 'category' && <th>Pessoa</th>}
-                          <th>Ações</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {group.transactions.map((transaction) => {
-                          const person = persons.find((p) => p.id === transaction.personId);
-                          const category = categories.find((c) => c.id === transaction.categoryId);
-                          return (
-                            <tr key={transaction.id}>
-                              <td>{transaction.description}</td>
-                              <td className={`amount ${transaction.type.toLowerCase()}`}>
-                                {formatCurrency(transaction.amount)}
-                              </td>
-                              <td>
-                                <span className={`type-badge ${transaction.type.toLowerCase()}`}>
-                                  {transaction.type === 'Income' ? 'Receita' : 'Despesa'}
-                                </span>
-                              </td>
-                              <td>{formatDate(transaction.occurredAt)}</td>
-                              {groupBy === 'person' && <td>{category?.description || '-'}</td>}
-                              {groupBy === 'category' && <td>{person?.name || '-'}</td>}
-                              <td>
-                                <div className="actions">
-                                  <button
-                                    className="action-button edit"
-                                    onClick={() => handleEdit(transaction)}
-                                    title="Editar"
-                                  >
-                                    ✏️
-                                  </button>
-                                  <button
-                                    className="action-button delete"
-                                    onClick={() => handleDelete(transaction)}
-                                    title="Excluir"
-                                  >
-                                    🗑️
-                                  </button>
+            <div className="table-container">
+              <table className="transactions-table">
+                <thead>
+                  <tr>
+                    <th style={{ width: '50px' }}></th>
+                    <th>{groupBy === 'person' ? 'Pessoa' : 'Categoria'}</th>
+                    <th>Receitas</th>
+                    <th>Despesas</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {groupedData.map((group) => (
+                    <React.Fragment key={group.key}>
+                      <tr className="group-row" onClick={() => toggleGroupExpansion(group.key)}>
+                        <td>
+                          <button className="expand-button">
+                            {expandedGroups[group.key] ? '▼' : '▶'}
+                          </button>
+                        </td>
+                        <td><strong>{group.label}</strong></td>
+                        <td className="amount income">
+                          <strong>{formatCurrency(group.income)}</strong>
+                        </td>
+                        <td className="amount expense">
+                          <strong>{formatCurrency(group.expense)}</strong>
+                        </td>
+                        <td className={`amount ${group.balance >= 0 ? 'income' : 'expense'}`}>
+                          <strong>{formatCurrency(group.balance)}</strong>
+                        </td>
+                      </tr>
+                      {expandedGroups[group.key] && group.transactions.map((transaction) => {
+                        const person = persons.find((p) => p.id === transaction.personId);
+                        const category = categories.find((c) => c.id === transaction.categoryId);
+                        return (
+                          <tr key={transaction.id} className="transaction-row">
+                            <td></td>
+                            <td>
+                              <div className="transaction-details">
+                                <div className="description">{transaction.description}</div>
+                                <div className="meta-info">
+                                  <span className={`type-badge ${transaction.type.toLowerCase()}`}>
+                                    {transaction.type === 'Income' ? 'Receita' : 'Despesa'}
+                                  </span>
+                                  <span className="date">{formatDate(transaction.occurredAt)}</span>
+                                  {groupBy === 'person' && <span className="category">{category?.description || '-'}</span>}
+                                  {groupBy === 'category' && <span className="person">{person?.name || '-'}</span>}
                                 </div>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              ))}
+                              </div>
+                            </td>
+                            <td className={`amount ${transaction.type === 'Income' ? 'income' : ''}`}>
+                              {transaction.type === 'Income' ? formatCurrency(transaction.amount) : '-'}
+                            </td>
+                            <td className={`amount ${transaction.type === 'Expense' ? 'expense' : ''}`}>
+                              {transaction.type === 'Expense' ? formatCurrency(transaction.amount) : '-'}
+                            </td>
+                            <td>
+                              <div className="actions">
+                                <button
+                                  className="action-button edit"
+                                  onClick={() => handleEdit(transaction)}
+                                  title="Editar"
+                                >
+                                  ✏️
+                                </button>
+                                <button
+                                  className="action-button delete"
+                                  onClick={() => handleDelete(transaction)}
+                                  title="Excluir"
+                                >
+                                  🗑️
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </React.Fragment>
+                  ))}
+                </tbody>
+              </table>
             </div>
           ) : (
             <div className="table-container">
