@@ -23,6 +23,7 @@ const Home: React.FC = () => {
   const [loadingData, setLoadingData] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
+  const [groupBy, setGroupBy] = useState<'none' | 'person' | 'category'>('none');
 
   // Filtros
   const [selectedPersons, setSelectedPersons] = useState<SelectOption[]>([]);
@@ -145,6 +146,64 @@ const Home: React.FC = () => {
   };
 
   const { income, expense, balance } = calculateTotals();
+
+  // Agrupar transações
+  const getGroupedData = () => {
+    if (groupBy === 'none') {
+      return null;
+    }
+
+    const grouped: Record<string, { income: number; expense: number; transactions: Transaction[] }> = {};
+
+    transactions.forEach((transaction) => {
+      const amount = typeof transaction.amount === 'string' 
+        ? parseFloat(transaction.amount) 
+        : transaction.amount;
+
+      let key = '';
+
+      if (groupBy === 'person') {
+        key = transaction.personId;
+      } else if (groupBy === 'category') {
+        key = transaction.categoryId;
+      }
+
+      if (!grouped[key]) {
+        grouped[key] = {
+          income: 0,
+          expense: 0,
+          transactions: [],
+        };
+      }
+
+      grouped[key].transactions.push(transaction);
+
+      if (transaction.type === 'Income') {
+        grouped[key].income += amount;
+      } else {
+        grouped[key].expense += amount;
+      }
+    });
+
+    return Object.entries(grouped).map(([key, data]) => ({
+      key,
+      label: groupBy === 'person' 
+        ? persons.find((p) => p.id === key)?.name || 'Desconhecido'
+        : categories.find((c) => c.id === key)?.description || 'Desconhecido',
+      income: data.income,
+      expense: data.expense,
+      balance: data.income - data.expense,
+      transactions: data.transactions,
+    }));
+  };
+
+  const groupedData = getGroupedData();
+
+  const groupByOptions: SelectOption[] = [
+    { value: 'none', label: 'Geral' },
+    { value: 'person', label: 'Por Pessoa' },
+    { value: 'category', label: 'Por Categoria' },
+  ];
 
   const handleCreate = () => {
     setEditingTransaction(null);
@@ -271,14 +330,107 @@ const Home: React.FC = () => {
         <div className="transactions-section">
           <div className="transactions-header">
             <h2>Transações</h2>
-            <button className="create-button" onClick={handleCreate}>
-              + Criar
-            </button>
+            <div className="transactions-controls">
+              <div className="group-by-select">
+                <label>Agrupar por:</label>
+                <Select
+                  options={groupByOptions}
+                  value={groupByOptions.find((opt) => opt.value === groupBy)}
+                  onChange={(selected) => setGroupBy((selected?.value as 'none' | 'person' | 'category') || 'none')}
+                  className="react-select-container"
+                  classNamePrefix="react-select"
+                />
+              </div>
+              <button className="create-button" onClick={handleCreate}>
+                + Criar
+              </button>
+            </div>
           </div>
           {loading ? (
             <div className="loading">Carregando transações...</div>
           ) : transactions.length === 0 ? (
             <div className="no-data">Nenhuma transação encontrada</div>
+          ) : groupBy !== 'none' && groupedData ? (
+            <div className="grouped-transactions">
+              {groupedData.map((group) => (
+                <div key={group.key} className="group-card">
+                  <div className="group-header">
+                    <h3>{group.label}</h3>
+                    <div className="group-totals">
+                      <div className="group-total-item">
+                        <span className="group-total-label">Receita:</span>
+                        <span className="group-total-value income">{formatCurrency(group.income)}</span>
+                      </div>
+                      <div className="group-total-item">
+                        <span className="group-total-label">Despesa:</span>
+                        <span className="group-total-value expense">{formatCurrency(group.expense)}</span>
+                      </div>
+                      <div className="group-total-item">
+                        <span className="group-total-label">Balanço:</span>
+                        <span className={`group-total-value ${group.balance >= 0 ? 'positive' : 'negative'}`}>
+                          {formatCurrency(group.balance)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="table-container">
+                    <table className="transactions-table">
+                      <thead>
+                        <tr>
+                          <th>Descrição</th>
+                          <th>Valor</th>
+                          <th>Tipo</th>
+                          <th>Data</th>
+                          {groupBy === 'person' && <th>Categoria</th>}
+                          {groupBy === 'category' && <th>Pessoa</th>}
+                          <th>Ações</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {group.transactions.map((transaction) => {
+                          const person = persons.find((p) => p.id === transaction.personId);
+                          const category = categories.find((c) => c.id === transaction.categoryId);
+                          return (
+                            <tr key={transaction.id}>
+                              <td>{transaction.description}</td>
+                              <td className={`amount ${transaction.type.toLowerCase()}`}>
+                                {formatCurrency(transaction.amount)}
+                              </td>
+                              <td>
+                                <span className={`type-badge ${transaction.type.toLowerCase()}`}>
+                                  {transaction.type === 'Income' ? 'Receita' : 'Despesa'}
+                                </span>
+                              </td>
+                              <td>{formatDate(transaction.occurredAt)}</td>
+                              {groupBy === 'person' && <td>{category?.description || '-'}</td>}
+                              {groupBy === 'category' && <td>{person?.name || '-'}</td>}
+                              <td>
+                                <div className="actions">
+                                  <button
+                                    className="action-button edit"
+                                    onClick={() => handleEdit(transaction)}
+                                    title="Editar"
+                                  >
+                                    ✏️
+                                  </button>
+                                  <button
+                                    className="action-button delete"
+                                    onClick={() => handleDelete(transaction)}
+                                    title="Excluir"
+                                  >
+                                    🗑️
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : (
             <div className="table-container">
               <table className="transactions-table">

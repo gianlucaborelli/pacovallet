@@ -140,6 +140,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 .transactions-header h2 {
@@ -147,6 +149,30 @@
   font-size: 20px;
   font-weight: 600;
   margin: 0;
+}
+
+.transactions-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.group-by-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.group-by-select label {
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.group-by-select .react-select-container {
+  min-width: 150px;
 }
 
 .create-button {
@@ -262,4 +288,77 @@
 
 .action-button.delete:hover {
   background: #fee2e2;
+}
+
+.grouped-transactions {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.group-card {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+}
+
+.group-header {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.group-header h3 {
+  color: #374151;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+.group-totals {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.group-total-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.group-total-label {
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.group-total-value {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.group-total-value.income {
+  color: #065f46;
+}
+
+.group-total-value.expense {
+  color: #991b1b;
+}
+
+.group-total-value.positive {
+  color: #065f46;
+}
+
+.group-total-value.negative {
+  color: #991b1b;
+}
+
+.group-card .table-container {
+  background: white;
+  border-radius: 6px;
+  overflow: hidden;
 }
