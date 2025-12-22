@@ -4,6 +4,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { transactionService } from '../../services/transactionService';
 import { Person, Category, Transaction, TransactionFilters } from '../../types/transaction';
+import TransactionModal from './TransactionModal';
 import './Home.css';
 
 interface SelectOption {
@@ -18,6 +19,8 @@ const Home: React.FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
 
   // Filtros
   const [selectedPersons, setSelectedPersons] = useState<SelectOption[]>([]);
@@ -141,6 +144,41 @@ const Home: React.FC = () => {
 
   const { income, expense, balance } = calculateTotals();
 
+  const handleCreate = () => {
+    setEditingTransaction(null);
+    setIsModalOpen(true);
+  };
+
+  const handleEdit = (transaction: Transaction) => {
+    setEditingTransaction(transaction);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async (transaction: Transaction) => {
+    if (!window.confirm(`Tem certeza que deseja excluir a transação "${transaction.description}"?`)) {
+      return;
+    }
+
+    try {
+      await transactionService.deleteTransaction(transaction.id);
+      await fetchTransactions();
+      alert('Transação excluída com sucesso!');
+    } catch (error) {
+      console.error('Erro ao excluir transação:', error);
+      alert(error instanceof Error ? error.message : 'Erro ao excluir transação');
+    }
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setEditingTransaction(null);
+  };
+
+  const handleModalSuccess = async () => {
+    await fetchTransactions();
+    handleModalClose();
+  };
+
   return (
     <div className="home-container">
       <div className="home-content">
@@ -229,7 +267,12 @@ const Home: React.FC = () => {
         </div>
 
         <div className="transactions-section">
-          <h2>Transações</h2>
+          <div className="transactions-header">
+            <h2>Transações</h2>
+            <button className="create-button" onClick={handleCreate}>
+              + Criar
+            </button>
+          </div>
           {loading ? (
             <div className="loading">Carregando transações...</div>
           ) : transactions.length === 0 ? (
@@ -245,6 +288,7 @@ const Home: React.FC = () => {
                     <th>Data</th>
                     <th>Categoria</th>
                     <th>Pessoa</th>
+                    <th>Ações</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -265,6 +309,24 @@ const Home: React.FC = () => {
                         <td>{formatDate(transaction.occurredAt)}</td>
                         <td>{category?.description || '-'}</td>
                         <td>{person?.name || '-'}</td>
+                        <td>
+                          <div className="actions">
+                            <button
+                              className="action-button edit"
+                              onClick={() => handleEdit(transaction)}
+                              title="Editar"
+                            >
+                              ✏️
+                            </button>
+                            <button
+                              className="action-button delete"
+                              onClick={() => handleDelete(transaction)}
+                              title="Excluir"
+                            >
+                              🗑️
+                            </button>
+                          </div>
+                        </td>
                       </tr>
                     );
                   })}
@@ -273,6 +335,16 @@ const Home: React.FC = () => {
             </div>
           )}
         </div>
+
+        {isModalOpen && (
+          <TransactionModal
+            transaction={editingTransaction}
+            persons={persons}
+            categories={categories}
+            onClose={handleModalClose}
+            onSuccess={handleModalSuccess}
+          />
+        )}
       </div>
     </div>
   );
