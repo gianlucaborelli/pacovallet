@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Pacovallet.Api/Pacovallet.Api.csproj" />
+  <Project Path="Pacovallet.Core/Pacovallet.Core.csproj" />
+</Solution>

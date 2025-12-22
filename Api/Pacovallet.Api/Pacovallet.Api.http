@@ -1,0 +1,6 @@
+@Pacovallet.Api_HostAddress = http://localhost:5064
+
+GET {{Pacovallet.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
