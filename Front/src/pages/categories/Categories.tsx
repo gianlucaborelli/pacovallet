@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { transactionService } from '../../services/transactionService';
+import { categoryService } from '../../services/categoryService';
 import { Category } from '../../types/transaction';
 import CategoryModal from './CategoryModal';
 import './Categories.css';
@@ -13,7 +13,7 @@ const Categories: React.FC = () => {
   const loadCategories = async () => {
     try {
       setLoading(true);
-      const data = await transactionService.getCategories();
+      const data = await categoryService.getCategories();
       setCategories(data);
     } catch (error) {
       console.error('Erro ao carregar categorias:', error);
@@ -43,7 +43,7 @@ const Categories: React.FC = () => {
     }
 
     try {
-      await transactionService.deleteCategory(category.id);
+      await categoryService.deleteCategory(category.id);
       await loadCategories();
       alert('Categoria excluída com sucesso!');
     } catch (error) {

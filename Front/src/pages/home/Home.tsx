@@ -3,6 +3,8 @@ import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { transactionService } from '../../services/transactionService';
+import { personService } from '../../services/personService';
+import { categoryService } from '../../services/categoryService';
 import { Person, Category, Transaction, TransactionFilters } from '../../types/transaction';
 import TransactionModal from './TransactionModal';
 import './Home.css';
@@ -39,8 +41,8 @@ const Home: React.FC = () => {
       try {
         setLoadingData(true);
         const [personsData, categoriesData] = await Promise.all([
-          transactionService.getPersons(),
-          transactionService.getCategories(),
+          personService.getPersons(),
+          categoryService.getCategories(),
         ]);
         setPersons(personsData);
         setCategories(categoriesData);

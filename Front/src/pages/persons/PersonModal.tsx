@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { transactionService } from '../../services/transactionService';
+import { personService } from '../../services/personService';
 import { Person } from '../../types/transaction';
 import './PersonModal.css';
 
@@ -50,10 +50,10 @@ const PersonModal: React.FC<PersonModalProps> = ({ person, onClose, onSuccess })
         if (!window.confirm(`Tem certeza que deseja atualizar a pessoa "${person.name}"?`)) {
           return;
         }
-        await transactionService.updatePerson(person.id, name.trim(), birthDate);
+        await personService.updatePerson(person.id, name.trim(), birthDate);
         alert('Pessoa atualizada com sucesso!');
       } else {
-        await transactionService.createPerson(name.trim(), birthDate);
+        await personService.createPerson(name.trim(), birthDate);
         alert('Pessoa criada com sucesso!');
       }
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
-import { transactionService } from '../../services/transactionService';
+import { categoryService } from '../../services/categoryService';
 import { Category } from '../../types/transaction';
 import './CategoryModal.css';
 
@@ -61,10 +61,10 @@ const CategoryModal: React.FC<CategoryModalProps> = ({ category, onClose, onSucc
         if (!window.confirm(`Tem certeza que deseja atualizar a categoria "${category.description}"?`)) {
           return;
         }
-        await transactionService.updateCategory(category.id, description.trim(), purpose.value);
+        await categoryService.updateCategory(category.id, description.trim(), purpose.value);
         alert('Categoria atualizada com sucesso!');
       } else {
-        await transactionService.createCategory(description.trim(), purpose.value);
+        await categoryService.createCategory(description.trim(), purpose.value);
         alert('Categoria criada com sucesso!');
       }
 

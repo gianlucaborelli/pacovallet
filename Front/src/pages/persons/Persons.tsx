@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { transactionService } from '../../services/transactionService';
+import { personService } from '../../services/personService';
 import { Person } from '../../types/transaction';
 import PersonModal from './PersonModal';
 import './Persons.css';
@@ -13,7 +13,7 @@ const Persons: React.FC = () => {
   const loadPersons = async () => {
     try {
       setLoading(true);
-      const data = await transactionService.getPersons();
+      const data = await personService.getPersons();
       setPersons(data);
     } catch (error) {
       console.error('Erro ao carregar pessoas:', error);
@@ -43,7 +43,7 @@ const Persons: React.FC = () => {
     }
 
     try {
-      await transactionService.deletePerson(person.id);
+      await personService.deletePerson(person.id);
       await loadPersons();
       alert('Pessoa excluída com sucesso!');
     } catch (error) {
