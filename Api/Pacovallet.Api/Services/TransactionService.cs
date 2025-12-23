@@ -133,45 +133,51 @@ namespace Pacovallet.Api.Services
         public async Task<ServiceResponse<List<TransactionDto>>> GetByFilter(FindTransactionsQuery query)
         {
             var filteredTransactions = _context.Transactions
-                                            .AsNoTracking()
-                                            .AsQueryable();
+                .AsNoTracking()
+                .AsQueryable();
 
             if (query.InitialDate.HasValue)
             {
-                var initialUtc = DateTime.SpecifyKind(
-                    query.InitialDate.Value,
+                var startDate = DateTime.SpecifyKind(
+                    query.InitialDate.Value.Date,
                     DateTimeKind.Utc);
 
                 filteredTransactions = filteredTransactions
-                    .Where(t => t.OccurredAt >= initialUtc);
+                    .Where(t => t.OccurredAt >= startDate);
             }
 
             if (query.FinalDate.HasValue)
             {
-                var finalUtc = DateTime.SpecifyKind(
-                    query.FinalDate.Value,
+                var endDate = DateTime.SpecifyKind(
+                    query.FinalDate.Value.Date.AddDays(1),
                     DateTimeKind.Utc);
 
                 filteredTransactions = filteredTransactions
-                    .Where(t => t.OccurredAt <= finalUtc);
+                    .Where(t => t.OccurredAt < endDate);
             }
 
             if (query.TransactionType.HasValue)
+            {
                 filteredTransactions = filteredTransactions
                     .Where(t => t.Type == query.TransactionType.Value);
+            }
 
-            if (query.PersonsId != null && query.PersonsId.Any())
+            if (query.PersonsId.Any() == true)
+            {
                 filteredTransactions = filteredTransactions
                     .Where(t => query.PersonsId.Contains(t.PersonId));
+            }
 
-            if (query.CategoryId != null && query.CategoryId.Any())
+            if (query.CategoryId.Any() == true)
+            {
                 filteredTransactions = filteredTransactions
                     .Where(t => query.CategoryId.Contains(t.CategoryId));
+            }
 
             var transactions = await filteredTransactions.ToListAsync();
 
-            return ServiceResponse<List<TransactionDto>>
-                .Ok([.. transactions.Select(t => new TransactionDto
+            return ServiceResponse<List<TransactionDto>>.Ok(
+                [.. transactions.Select(t => new TransactionDto
                 {
                     Id = t.Id,
                     Description = t.Description,
@@ -181,7 +187,8 @@ namespace Pacovallet.Api.Services
                     CategoryId = t.CategoryId,
                     PersonId = t.PersonId
                 })],
-                "Filtered transactions retrieved successfully");
+                "Filtered transactions retrieved successfully"
+            );
         }
     }
 }
