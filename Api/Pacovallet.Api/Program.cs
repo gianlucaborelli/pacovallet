@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.HttpOverrides;
 using Pacovallet.Api.Configurations;
 using Pacovallet.Api.Models;
 using Pacovallet.Api.Services;
@@ -58,6 +59,11 @@ if (app.Environment.IsDevelopment())
         options.RoutePrefix = "swagger";
     });
 }
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedProto
+});
 
 app.UseHttpsRedirection();
 
