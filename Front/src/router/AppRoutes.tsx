@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import Login from '../pages/auth/Login';
-import Register from '../pages/auth/Register';
+import Auth from '../pages/auth/Auth';
 import Home from '../pages/home/Home';
 import Persons from '../pages/persons/Persons';
 import Categories from '../pages/categories/Categories';
@@ -12,8 +11,8 @@ export default function AppRoutes() {
   return (
     <Routes>
       {/* Rotas públicas */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Auth />} />
+      <Route path="/register" element={<Auth />} />
 
       {/* Rotas protegidas */}
       <Route element={<ProtectedRoutes />}>
