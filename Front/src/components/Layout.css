@@ -1,6 +1,6 @@
 .layout-container {
   min-height: 100vh;
-  background: #f9fafb;
+  background: var(--color-gray-50);
 }
 
 .app-logo {
@@ -29,7 +29,7 @@
   background: none;
   border: none;
   font-size: 24px;
-  color: #2d7d4a;
+  color: var(--pacovallet-green-primary);
   cursor: pointer;
   padding: 8px;
   border-radius: 6px;
@@ -40,11 +40,11 @@
 }
 
 .menu-button:hover {
-  background: rgba(45, 125, 74, 0.08);
+  background: var(--pacovallet-green-hover);
 }
 
 .app-header h1 {
-  color: #2d7d4a;
+  color: var(--pacovallet-green-primary);
   margin: 0;
   font-size: 24px;
   font-weight: 600;
@@ -57,12 +57,12 @@
 }
 
 .user-info span {
-  color: #6b7280;
+  color: var(--color-gray-500);
   font-size: 14px;
 }
 
 .logout-button {
-  background: #b85e3d;
+  background: var(--pacovallet-terracotta);
   color: white;
   border: none;
   padding: 8px 16px;
@@ -74,7 +74,7 @@
 }
 
 .logout-button:hover {
-  background: #a45742;
+  background: var(--pacovallet-terracotta-dark);
 }
 
 .layout-content {

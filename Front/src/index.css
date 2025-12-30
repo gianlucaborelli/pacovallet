@@ -23,14 +23,51 @@ code {
 .react-datepicker__input-container input {
   width: 100%;
   padding: 8px 12px;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--color-gray-400);
   border-radius: 6px;
   font-size: 16px;
   transition: all 0.2s;
+  background-color: #fafafa;
+  box-sizing: border-box;
 }
 
 .react-datepicker__input-container input:focus {
   outline: none;
-  border-color: #a45742;
-  box-shadow: 0 0 0 3px rgba(180, 94, 61, 0.1);
+  border-color: var(--pacovallet-terracotta-dark);
+  box-shadow: var(--shadow-terracotta);
+  background-color: white;
+}
+
+/* Estilos globais para inputs genéricos */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+textarea {
+  border: 2px solid var(--color-gray-400) !important;
+  background-color: #fafafa !important;
+  transition: all 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+input[type="datetime-local"]:focus,
+textarea:focus {
+  border-color: var(--pacovallet-terracotta-dark) !important;
+  background-color: white !important;
+  box-shadow: var(--shadow-terracotta) !important;
+  outline: none !important;
 }

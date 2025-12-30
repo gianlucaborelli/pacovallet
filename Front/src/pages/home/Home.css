@@ -1,6 +1,6 @@
 .home-container {
   min-height: 100vh;
-  background: #f9fafb;
+  background: var(--color-gray-50);
 }
 
 .home-content {
@@ -18,7 +18,7 @@
 }
 
 .filters-section h2 {
-  color: #374151;
+  color: var(--color-gray-700);
   font-size: 20px;
   font-weight: 600;
   margin: 0 0 20px 0;
@@ -37,7 +37,7 @@
 }
 
 .filter-group label {
-  color: #374151;
+  color: var(--color-gray-700);
   font-size: 14px;
   font-weight: 500;
 }
@@ -47,18 +47,18 @@
 }
 
 .react-select__control {
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--color-gray-400);
   border-radius: 6px;
   min-height: 38px;
 }
 
 .react-select__control:hover {
-  border-color: #a45742;
+  border-color: var(--pacovallet-terracotta-dark) !important;
 }
 
 .react-select__control--is-focused {
-  border-color: #a45742;
-  box-shadow: 0 0 0 3px rgba(180, 94, 61, 0.1);
+  border-color: var(--pacovallet-terracotta-dark) !important;
+  box-shadow: var(--shadow-terracotta) !important;
 }
 
 .balance-section {
@@ -82,7 +82,7 @@
 }
 
 .balance-card.expense {
-  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  background: linear-gradient(135deg, var(--color-error-bg) 0%, #fecaca 100%);
   border-left: 4px solid #ef4444;
 }
 
@@ -92,14 +92,14 @@
 }
 
 .balance-card.balance.negative {
-  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  background: linear-gradient(135deg, var(--color-error-bg) 0%, #fecaca 100%);
   border-left: 4px solid #ef4444;
 }
 
 .balance-label {
   font-size: 14px;
   font-weight: 500;
-  color: #374151;
+  color: var(--color-gray-700);
   margin-bottom: 8px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -144,7 +144,7 @@
 }
 
 .transactions-header h2 {
-  color: #374151;
+  color: var(--color-gray-700);
   font-size: 20px;
   font-weight: 600;
   margin: 0;
@@ -164,7 +164,7 @@
 }
 
 .group-by-select label {
-  color: #374151;
+  color: var(--color-gray-700);
   font-size: 14px;
   font-weight: 500;
   white-space: nowrap;
@@ -175,7 +175,7 @@
 }
 
 .create-button {
-  background: linear-gradient(135deg, #2d7d4a 0%, #4a9b68 100%);
+  background: var(--pacovallet-gradient-primary);
   color: white;
   border: none;
   padding: 10px 20px;
@@ -199,7 +199,7 @@
 .no-data {
   text-align: center;
   padding: 40px;
-  color: #6b7280;
+  color: var(--color-gray-500);
   font-size: 16px;
 }
 
@@ -213,27 +213,27 @@
 }
 
 .transactions-table thead {
-  background-color: #f9fafb;
+  background-color: var(--color-gray-50);
 }
 
 .transactions-table th {
   padding: 12px;
   text-align: left;
   font-weight: 600;
-  color: #374151;
+  color: var(--color-gray-700);
   font-size: 14px;
-  border-bottom: 2px solid #e5e7eb;
+  border-bottom: 2px solid var(--color-gray-200);
 }
 
 .transactions-table td {
   padding: 12px;
-  border-bottom: 1px solid #e5e7eb;
-  color: #6b7280;
+  border-bottom: 1px solid var(--color-gray-200);
+  color: var(--color-gray-500);
   font-size: 14px;
 }
 
 .transactions-table tbody tr:hover {
-  background-color: #f9fafb;
+  background-color: var(--color-gray-50);
 }
 
 .amount {
@@ -262,7 +262,7 @@
 }
 
 .type-badge.expense {
-  background-color: #fee2e2;
+  background-color: var(--color-error-bg);
   color: #991b1b;
 }
 
@@ -286,7 +286,7 @@
 }
 
 .action-button.delete:hover {
-  background: #fee2e2;
+  background: var(--color-error-bg);
 }
 
 .grouped-transactions {
@@ -296,20 +296,20 @@
 }
 
 .group-card {
-  background: #f9fafb;
+  background: var(--color-gray-50);
   border-radius: 8px;
   padding: 20px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-gray-200);
 }
 
 .group-header {
   margin-bottom: 16px;
   padding-bottom: 16px;
-  border-bottom: 2px solid #e5e7eb;
+  border-bottom: 2px solid var(--color-gray-200);
 }
 
 .group-header h3 {
-  color: #374151;
+  color: var(--color-gray-700);
   font-size: 18px;
   font-weight: 600;
   margin: 0 0 12px 0;
@@ -328,7 +328,7 @@
 }
 
 .group-total-label {
-  color: #6b7280;
+  color: var(--color-gray-500);
   font-size: 12px;
   font-weight: 500;
   text-transform: uppercase;
@@ -366,7 +366,7 @@
 .group-row {
   background-color: #f8fafc;
   cursor: pointer;
-  border-bottom: 2px solid #e5e7eb !important;
+  border-bottom: 2px solid var(--color-gray-200) !important;
   font-weight: 600;
 }
 
@@ -383,7 +383,7 @@
   background: none;
   border: none;
   font-size: 16px;
-  color: #6b7280;
+  color: var(--color-gray-500);
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
@@ -391,8 +391,8 @@
 }
 
 .expand-button:hover {
-  background-color: #e5e7eb;
-  color: #374151;
+  background-color: var(--color-gray-200);
+  color: var(--color-gray-700);
 }
 
 .transaction-row {
@@ -400,7 +400,7 @@
 }
 
 .transaction-row:hover {
-  background-color: #f9fafb !important;
+  background-color: var(--color-gray-50) !important;
 }
 
 .transaction-details {
@@ -409,7 +409,7 @@
 
 .transaction-details .description {
   font-weight: 500;
-  color: #374151;
+  color: var(--color-gray-700);
   margin-bottom: 4px;
 }
 
@@ -421,15 +421,15 @@
 }
 
 .transaction-details .date {
-  color: #6b7280;
+  color: var(--color-gray-500);
   font-size: 12px;
 }
 
 .transaction-details .category,
 .transaction-details .person {
-  color: #6b7280;
+  color: var(--color-gray-500);
   font-size: 12px;
-  background-color: #f3f4f6;
+  background-color: var(--color-gray-100);
   padding: 2px 8px;
   border-radius: 12px;
 }

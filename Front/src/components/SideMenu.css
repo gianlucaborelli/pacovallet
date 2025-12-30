@@ -39,7 +39,7 @@
 
 .side-menu-header {
   padding: 20px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--color-gray-200);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -47,7 +47,7 @@
 
 .side-menu-header h2 {
   margin: 0;
-  color: #2d7d4a;
+  color: var(--pacovallet-green-primary);
   font-size: 20px;
 }
 
@@ -55,7 +55,7 @@
   background: none;
   border: none;
   font-size: 24px;
-  color: #6b7280;
+  color: var(--color-gray-500);
   cursor: pointer;
   padding: 0;
   width: 30px;
@@ -68,7 +68,7 @@
 }
 
 .close-button:hover {
-  background: #f3f4f6;
+  background: var(--color-gray-100);
 }
 
 .side-menu-nav {
@@ -81,7 +81,7 @@
   display: flex;
   align-items: center;
   padding: 12px 20px;
-  color: #374151;
+  color: var(--color-gray-700);
   text-decoration: none;
   transition: all 0.2s;
   border-left: 3px solid transparent;
@@ -89,13 +89,13 @@
 
 .side-menu-item:hover {
   background: rgba(45, 125, 74, 0.05);
-  color: #2d7d4a;
+  color: var(--pacovallet-green-primary);
 }
 
 .side-menu-item.active {
   background: rgba(45, 125, 74, 0.1);
-  color: #2d7d4a;
-  border-left-color: #2d7d4a;
+  color: var(--pacovallet-green-primary);
+  border-left-color: var(--pacovallet-green-primary);
   font-weight: 500;
 }
 

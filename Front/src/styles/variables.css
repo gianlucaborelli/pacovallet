@@ -65,13 +65,62 @@
 }
 
 /* Sobrescrevendo cores padrão do react-select globalmente */
+.react-select__control {
+  background-color: #fafafa !important;
+  border: 2px solid var(--color-gray-400) !important;
+  box-shadow: none !important;
+}
+
 .react-select__control:hover {
   border-color: var(--pacovallet-terracotta-dark) !important;
+  background-color: white !important;
+  box-shadow: none !important;
 }
 
 .react-select__control--is-focused {
   border-color: var(--pacovallet-terracotta-dark) !important;
   box-shadow: var(--shadow-terracotta) !important;
+  background-color: white !important;
+}
+
+.react-select__value-container {
+  background-color: transparent !important;
+  padding: 2px 8px !important;
+}
+
+.react-select__single-value {
+  color: var(--color-gray-700) !important;
+  margin: 0 !important;
+}
+
+.react-select__placeholder {
+  color: var(--color-gray-500) !important;
+  margin: 0 !important;
+}
+
+.react-select__menu {
+  background-color: white !important;
+  border: 1px solid var(--color-gray-200) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+  z-index: 1000 !important;
+  margin-top: 4px !important;
+}
+
+.react-select__menu-list {
+  background-color: white !important;
+  border-radius: 8px !important;
+  padding: 4px !important;
+  max-height: 200px !important;
+}
+
+.react-select__option {
+  background-color: white !important;
+  color: var(--color-gray-700) !important;
+  padding: 8px 12px !important;
+  border-radius: 4px !important;
+  margin: 1px 0 !important;
+  cursor: pointer !important;
 }
 
 .react-select__option--is-focused {
@@ -81,4 +130,27 @@
 
 .react-select__option--is-selected {
   background-color: var(--pacovallet-green-primary) !important;
+  color: white !important;
+}
+
+.react-select__option--is-selected.react-select__option--is-focused {
+  background-color: var(--pacovallet-green-primary) !important;
+  color: white !important;
+}
+
+.react-select__indicator-separator {
+  display: none !important;
+}
+
+.react-select__dropdown-indicator {
+  color: var(--color-gray-400) !important;
+  padding: 8px !important;
+}
+
+.react-select__dropdown-indicator:hover {
+  color: var(--pacovallet-terracotta) !important;
+}
+
+.react-select__loading-indicator {
+  display: none !important;
 }
