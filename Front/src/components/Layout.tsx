@@ -18,6 +18,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <button className="menu-button" onClick={() => setIsMenuOpen(true)}>
             ☰
           </button>
+          <img src="/logo192.png" alt="App Logo" className="app-logo" />
           <h1>PacoVallet</h1>
         </div>
         <div className="user-info">

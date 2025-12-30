@@ -106,8 +106,8 @@
 }
 
 .form-group input:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #A45742;
+  box-shadow: 0 0 0 3px rgba(180, 94, 61, 0.1);
 }
 
 .form-group input:disabled {
@@ -126,12 +126,12 @@
 }
 
 .react-select__control:hover {
-  border-color: #667eea;
+  border-color: #A45742;
 }
 
 .react-select__control--is-focused {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #A45742;
+  box-shadow: 0 0 0 3px rgba(180, 94, 61, 0.1);
 }
 
 .error-message {
@@ -172,13 +172,13 @@
 }
 
 .submit-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2D7D4A 0%, #4A9B68 100%);
   color: white;
 }
 
 .submit-button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 10px 20px rgba(45, 125, 74, 0.3);
 }
 
 .cancel-button:disabled,

@@ -3,6 +3,10 @@
   background: #f9fafb;
 }
 
+.app-logo {
+  height: 40px;
+}
+
 .app-header {
   background: white;
   padding: 16px 40px;
@@ -25,7 +29,7 @@
   background: none;
   border: none;
   font-size: 24px;
-  color: #667eea;
+  color: #2d7d4a;
   cursor: pointer;
   padding: 8px;
   border-radius: 6px;
@@ -36,11 +40,11 @@
 }
 
 .menu-button:hover {
-  background: #f0f4ff;
+  background: rgba(45, 125, 74, 0.08);
 }
 
 .app-header h1 {
-  color: #667eea;
+  color: #2d7d4a;
   margin: 0;
   font-size: 24px;
   font-weight: 600;
@@ -58,7 +62,7 @@
 }
 
 .logout-button {
-  background: #ef4444;
+  background: #b85e3d;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -70,10 +74,9 @@
 }
 
 .logout-button:hover {
-  background: #dc2626;
+  background: #a45742;
 }
 
 .layout-content {
   min-height: calc(100vh - 73px);
 }
-

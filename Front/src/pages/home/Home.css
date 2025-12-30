@@ -53,12 +53,12 @@
 }
 
 .react-select__control:hover {
-  border-color: #667eea;
+  border-color: #a45742;
 }
 
 .react-select__control--is-focused {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #a45742;
+  box-shadow: 0 0 0 3px rgba(180, 94, 61, 0.1);
 }
 
 .balance-section {
@@ -175,7 +175,7 @@
 }
 
 .create-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2d7d4a 0%, #4a9b68 100%);
   color: white;
   border: none;
   padding: 10px 20px;
