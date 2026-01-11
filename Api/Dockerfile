@@ -10,6 +10,7 @@ COPY . .
 # Restore usando a solution
 RUN dotnet restore "Pacovallet.slnx"
 
+
 # Build / Publish
 RUN dotnet publish \
     "Pacovallet.Api/Pacovallet.Api.csproj" \
