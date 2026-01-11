@@ -28,12 +28,12 @@ jobs:
         run: |
           docker build \
             -f Api/Dockerfile \
-            -t ghcr.io/${{ secrets.PROJECT_NAME }}:${{ github.sha }} \
-            -t ghcr.io/${{ secrets.PROJECT_NAME }}:latest \
+            -t ghcr.io/${{ github.repository }}:${{ github.sha }} \
+            -t ghcr.io/${{ github.repository }}:latest \
             Api
 
-          docker push ghcr.io/${{ secrets.PROJECT_NAME }}:${{ github.sha }}
-          docker push ghcr.io/${{ secrets.PROJECT_NAME }}:latest
+          docker push ghcr.io/${{ github.repository }}:${{ github.sha }}
+          docker push ghcr.io/${{ github.repository }}:latest
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
