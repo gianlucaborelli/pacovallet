@@ -14,20 +14,25 @@ namespace Pacovallet.Api.Services
 
         public async Task<ServiceResponse<List<TransactionDto>>> GetAllAsync()
         {
-            var transactions = _context.Transactions.ToList();
-            var transactionDtos = transactions.Select(t => new TransactionDto
-            {
-                Id = t.Id,
-                Description = t.Description,
-                Amount = t.Amount,
-                OccurredAt = t.OccurredAt,
-                Type = t.Type,
-                CategoryId = t.CategoryId,
-                PersonId = t.PersonId
-            }).ToList();
+            var transactions = await _context.Transactions
+                .Where(t => t.ParentTransactionId == null)
+                .Select(t => new TransactionDto
+                {
+                    Id = t.Id,
+                    Description = t.Description,
+                    Amount = t.Amount,
+                    OccurredAt = t.OccurredAt,
+                    Type = t.Type,
+                    CategoryId = t.CategoryId,
+                    PersonId = t.PersonId,
+
+                    HasChildren = _context.Transactions
+                        .Any(c => c.ParentTransactionId == t.Id)
+                })
+                .ToListAsync();
 
             return ServiceResponse<List<TransactionDto>>
-                .Ok(transactionDtos, 
+                .Ok(transactions, 
                 "Transactions retrieved successfully");
         }
 

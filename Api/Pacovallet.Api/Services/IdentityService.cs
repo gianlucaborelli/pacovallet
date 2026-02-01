@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Pacovallet.Api.Data;
 using Pacovallet.Api.Helper.Identity;
 using Pacovallet.Api.Models;
@@ -12,12 +13,14 @@ namespace Pacovallet.Api.Services
     public class IdentityService(        
         IJwtAuthManager jwtManager,        
         SignInManager<User> signInManager,
-        UserManager<User> userManager
+        UserManager<User> userManager,
+        ApplicationContext context
         ) : IIdentityService
     {        
         private readonly IJwtAuthManager _jwtManager = jwtManager;
         private readonly SignInManager<User> _signInManager = signInManager;
         private readonly UserManager<User> _userManager = userManager;
+        private readonly ApplicationContext _context = context;
 
         public async Task<ServiceResponse<string>> Login(LoginDto request)
         {
@@ -67,6 +70,16 @@ namespace Pacovallet.Api.Services
             if (identityResult.Succeeded)
             {
                 var userId = identityUser.Id;
+
+                await _context.Categories.AddAsync(new Category
+                {
+                    UserId = identityUser.Id,
+                    Description = "Boleto Bancário",
+                    Purpose = CategoryTypeEnum.Expense,
+                    IsSystem = true
+                });
+
+                await _context.SaveChangesAsync();
 
                 return ServiceResponse<Guid>
                         .Ok(userId);

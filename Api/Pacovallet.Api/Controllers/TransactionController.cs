@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Pacovallet.Api.Models;
 using Pacovallet.Api.Models.Dto;
 using Pacovallet.Api.Services;
+using Pacovallet.Api.Services.Factory;
 using Pacovallet.Core.Controller;
 
 namespace Pacovallet.Api.Controllers
@@ -40,6 +42,25 @@ namespace Pacovallet.Api.Controllers
         {
             await _service.DeleteTransactionAsync(id);
             return NoContent();
+        }
+
+        [HttpPost]
+        [Route("bulk")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UploadInvoice(
+            [FromForm] CreditCardBankEnum bank,
+            [FromForm] Guid personId,
+            [FromForm] IFormFile file,
+            [FromServices] IInvoiceProcessingService service)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            var response = await service.ProcessInvoiceAsync(bank, file, personId);
+
+            return this.ToActionResult(response);
         }
     }
 }

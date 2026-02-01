@@ -1,12 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Pacovallet.Core.Converters;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Pacovallet.Api.Models.Dto
 {
     public class TransactionDto
     {
-        [Required]
-        public Guid Id { get; set; }
-        public required string Description { get; set; }
+        public Guid? Id { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         [Range(0.01, double.MaxValue, ErrorMessage = "Amount must be greater than zero.")]
         public decimal Amount { get; set; }
@@ -16,5 +17,10 @@ namespace Pacovallet.Api.Models.Dto
 
         public Guid CategoryId { get; set; }
         public Guid PersonId { get; set; }
+
+        [JsonConverter(typeof(EmptyStringToListConverter<TransactionDto>))]
+        public List<TransactionDto> ChildTransactions { get; set; } = [];
+
+        public bool HasChildren { get; set; } = false;
     }
 }

@@ -18,17 +18,23 @@ public class Transaction : Entity
 
     public Category Category { get; private set; } = null!;
     public Person Person { get; set; } = null!;
+        
+    public Guid? ParentTransactionId { get; private set; }
+    public Transaction? ParentTransaction { get; private set; }
+
+    public ICollection<Transaction> ChildTransactions { get; private set; }
+        = [];
 
     protected Transaction() { }
 
     public Transaction(
-    string description,
-    decimal amount,
-    TransactionTypeEnum type,
-    Guid categoryId,
-    Guid personId,
-    DateTime? occurredAt = null 
-)
+            string description,
+            decimal amount,
+            TransactionTypeEnum type,
+            Guid categoryId,
+            Guid personId,
+            DateTime? occurredAt = null 
+        )
     {
         Description = description;
         Amount = amount;
@@ -39,6 +45,20 @@ public class Transaction : Entity
             OccurredAt = DateTime.SpecifyKind(occurredAt.Value, DateTimeKind.Utc);
         else
             OccurredAt = DateTime.UtcNow;
+    }
+
+    public void SetParentTransaction(Transaction parent)
+    {
+        if (parent == null)
+            return;
+
+        ParentTransaction = parent;
+        ParentTransactionId = parent.Id;
+    }
+
+    public void SetChildTransactions(ICollection<Transaction> children)
+    {
+        ChildTransactions = children;
     }
 
 

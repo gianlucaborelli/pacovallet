@@ -44,6 +44,12 @@ namespace Pacovallet.Api.Data.Mappings
                 .HasForeignKey(t => t.PersonId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder
+                .HasOne(t => t.ParentTransaction)
+                .WithMany(t => t.ChildTransactions)
+                .HasForeignKey(t => t.ParentTransactionId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.HasIndex(t => t.UserId);
             builder.HasIndex(t => t.PersonId);
             builder.HasIndex(t => t.CategoryId);

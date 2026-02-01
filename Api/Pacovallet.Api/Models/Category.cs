@@ -6,5 +6,6 @@ namespace Pacovallet.Api.Models
     {
         public required string Description { get; set; }
         public required CategoryTypeEnum Purpose { get; set; }
+        public bool IsSystem { get; set; } = false;
     }
 }
