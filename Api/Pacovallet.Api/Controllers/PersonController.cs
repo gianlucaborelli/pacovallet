@@ -1,53 +1,70 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Pacovallet.Api.Models.Dto;
-using Pacovallet.Api.Services;
+using Pacovallet.Application.DTOs;
+using Pacovallet.Application.UseCases.Person;
 using Pacovallet.Core.Controller;
-using System.Threading.Tasks;
 
 namespace Pacovallet.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class PersonController(
-        IPersonService service) : ControllerBase
+    public class PersonController : ControllerBase
     {
-        private readonly IPersonService _service = service;
+        private readonly GetAllPersonsUseCase _getPersonsUseCase;
+        private readonly CreatePersonUseCase _createPersonUseCase;
+        private readonly UpdatePersonUseCase _updatePersonUseCase;
+        private readonly DeletePersonUseCase _deletePersonUseCase;
+        private readonly GetPersonByIdUserCase _getPersonByIdUserCase;
+
+        public PersonController(
+            GetAllPersonsUseCase getPersonsUseCase,
+            CreatePersonUseCase createPersonUseCase,
+            UpdatePersonUseCase updatePersonUseCase,
+            DeletePersonUseCase deletePersonUseCase,
+            GetPersonByIdUserCase getPersonByIdUserCase)
+        {
+            _getPersonsUseCase = getPersonsUseCase;
+            _createPersonUseCase = createPersonUseCase;
+            _updatePersonUseCase = updatePersonUseCase;
+            _deletePersonUseCase = deletePersonUseCase;
+            _getPersonByIdUserCase = getPersonByIdUserCase;
+        }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetPersons()
         {
-            var response = await _service.GetAll();
+            var response = await _getPersonsUseCase.ExecuteAsync();
             return this.ToActionResult(response);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid id)
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IActionResult> GetPersonById(Guid id)
         {
-            var response = await _service.GetById(id);
+            var response = await _getPersonByIdUserCase.ExecuteAsync(id);
             return this.ToActionResult(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreatePersonRequest request)
+        public async Task<IActionResult> CreatePerson([FromBody] CreatePersonRequest request)
         {
-            var response = await _service.Create(request);
+            var response = await _createPersonUseCase.ExecuteAsync(request);
             return this.ToActionResult(response);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdatePersonRequest request)
+        public async Task<IActionResult> UpdatePerson([FromBody] UpdatePersonRequest request)
         {
-            var response = await _service.Update(request);
+            var response = await _updatePersonUseCase.ExecuteAsync(request);
             return this.ToActionResult(response);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> DeletePerson(Guid id)
         {
-            await _service.Delete(id);
-            return NoContent();
+            var response = await _deletePersonUseCase.ExecuteAsync(id);
+            return this.ToActionResult(response);
         }
     }
 }

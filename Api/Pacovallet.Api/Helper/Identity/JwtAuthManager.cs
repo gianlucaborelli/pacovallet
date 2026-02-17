@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Pacovallet.Api.Data;
-using Pacovallet.Api.Models;
-using System.ComponentModel.DataAnnotations;
+using Pacovallet.Domain.Entities;
+using Pacovallet.Infrastructure.Persistence;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace Pacovallet.Api.Helper.Identity;

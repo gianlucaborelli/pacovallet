@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Pacovallet.Api.Data;
 using Pacovallet.Api.Helper.Identity;
-using Pacovallet.Api.Models;
+using Pacovallet.Domain.Entities;
+using Pacovallet.Infrastructure.Persistence;
 using System.Text;
 
 namespace Pacovallet.Api.Configurations

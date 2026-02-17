@@ -89,8 +89,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
         throw new Error(errorMessage);
       }
-
-      const jwtToken = await response.text();
+      
+      const data = await response.json();
+      const jwtToken = data.accessToken || data.token || data.access_token;
       
       if (!jwtToken) {
         throw new Error('Token não recebido do servidor');

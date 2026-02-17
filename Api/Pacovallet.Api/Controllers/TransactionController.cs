@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Pacovallet.Api.Models;
-using Pacovallet.Api.Models.Dto;
-using Pacovallet.Api.Services;
-using Pacovallet.Api.Services.Factory;
+using Pacovallet.Application.DTOs;
+using Pacovallet.Application.UseCases.Transaction;
 using Pacovallet.Core.Controller;
 
 namespace Pacovallet.Api.Controllers
@@ -11,55 +9,50 @@ namespace Pacovallet.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class TransactionController(
-        ITransactionService service) : ControllerBase
+    public class TransactionController : ControllerBase
     {
-        private readonly ITransactionService _service = service;
+        private readonly GetTransactionsByFilterUseCase _getTransactionsByFilterUseCase;
+        private readonly CreateTransactionUseCase _createTransactionUseCase;
+        private readonly UpdateTransactionUseCase _updateTransactionUseCase;
+        private readonly DeleteTransactionUseCase _deletingTransactionUseCase;
+
+        public TransactionController(
+            GetTransactionsByFilterUseCase getTransactionsByFilterUseCase,
+            CreateTransactionUseCase createTransactionUseCase,
+            UpdateTransactionUseCase updateTransactionUseCase,
+            DeleteTransactionUseCase deleteTransactionUseCase)
+        {
+            _getTransactionsByFilterUseCase = getTransactionsByFilterUseCase;
+            _createTransactionUseCase = createTransactionUseCase;
+            _updateTransactionUseCase = updateTransactionUseCase;
+            _deletingTransactionUseCase = deleteTransactionUseCase;
+        }
 
         [HttpGet]
-        public async Task<IActionResult> GetByFilter([FromQuery] FindTransactionsQuery query) 
+        public async Task<IActionResult> GetTransactionsByFilter([FromQuery] FindTransactionsQuery request)
         {
-            var response = await  _service.GetByFilter(query);
+            var response = await _getTransactionsByFilterUseCase.ExecuteAsync(request);
             return this.ToActionResult(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateTransactionRequest request)
+        public async Task<IActionResult> CreateTransaction([FromBody] CreateTransactionRequest request)
         {
-            var response = await _service.CreateTransactionAsync(request);
+            var response = await _createTransactionUseCase.ExecuteAsync(request);
             return this.ToActionResult(response);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] TransactionDto request)
+        public async Task<IActionResult> UpdateTransaction([FromBody] TransactionDto request)
         {
-            var response = await _service.UpdateTransactionAsync(request);
+            var response = await _updateTransactionUseCase.ExecuteAsync(request);
             return this.ToActionResult(response);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> DeleteTransaction(Guid id)
         {
-            await _service.DeleteTransactionAsync(id);
-            return NoContent();
-        }
-
-        [HttpPost]
-        [Route("bulk")]
-        [Consumes("multipart/form-data")]
-        public async Task<IActionResult> UploadInvoice(
-            [FromForm] CreditCardBankEnum bank,
-            [FromForm] Guid personId,
-            [FromForm] IFormFile file,
-            [FromServices] IInvoiceProcessingService service)
-        {
-            if (file == null || file.Length == 0)
-            {
-                return BadRequest("No file uploaded.");
-            }
-
-            var response = await service.ProcessInvoiceAsync(bank, file, personId);
-
+            var response = await _deletingTransactionUseCase.ExecuteAsync(id);
             return this.ToActionResult(response);
         }
     }

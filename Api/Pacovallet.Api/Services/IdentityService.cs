@@ -1,28 +1,33 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Pacovallet.Api.Data;
+using Microsoft.AspNetCore.Identity;
 using Pacovallet.Api.Helper.Identity;
-using Pacovallet.Api.Models;
-using Pacovallet.Api.Models.Dto;
+using Pacovallet.Application.DTOs;
 using Pacovallet.Core.Controller;
+using Pacovallet.Domain.Entities;
+using Pacovallet.Infrastructure.Persistence;
 using System.Net;
 using System.Security.Authentication;
 
 namespace Pacovallet.Api.Services
 {
-    public class IdentityService(        
-        IJwtAuthManager jwtManager,        
+    public interface IIdentityService
+    {
+        Task<ServiceResponse<LoginResponse>> Login(LoginRequest request);
+        Task<ServiceResponse<RegisterResponse>> RegisterUser(RegisterRequest request);
+    }
+
+    public class IdentityService(
+        IJwtAuthManager jwtManager,
         SignInManager<User> signInManager,
         UserManager<User> userManager,
         ApplicationContext context
         ) : IIdentityService
-    {        
+    {
         private readonly IJwtAuthManager _jwtManager = jwtManager;
         private readonly SignInManager<User> _signInManager = signInManager;
         private readonly UserManager<User> _userManager = userManager;
         private readonly ApplicationContext _context = context;
 
-        public async Task<ServiceResponse<string>> Login(LoginDto request)
+        public async Task<ServiceResponse<LoginResponse>> Login(LoginRequest request)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user is not null)
@@ -33,28 +38,28 @@ namespace Pacovallet.Api.Services
                 if (result.Succeeded)
                 {
                     var accessToken = _jwtManager.GenerateAccessToken(user, role);
-                    return ServiceResponse<string>
-                            .Ok(accessToken);
+                    return ServiceResponse<LoginResponse>
+                            .Ok(new LoginResponse { AccessToken = accessToken });
                 }
 
                 if (result.IsLockedOut)
-                    return ServiceResponse<string>
+                    return ServiceResponse<LoginResponse>
                             .Fail("This user is temporarily blocked",
-                                HttpStatusCode.Unauthorized);   
+                                HttpStatusCode.Unauthorized);
             }
 
-            return ServiceResponse<string>
+            return ServiceResponse<LoginResponse>
                     .Fail("Incorrect user or password",
                         HttpStatusCode.BadRequest);
         }
 
-        public async Task<ServiceResponse<Guid>> RegisterUser(RegisterUserDto request)
+        public async Task<ServiceResponse<RegisterResponse>> RegisterUser(RegisterRequest request)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
 
             if (user is not null)
-                return ServiceResponse<Guid>
-                    .Fail("Expense already exists",
+                return ServiceResponse<RegisterResponse>
+                    .Fail("User already exists",
                         HttpStatusCode.Conflict);
 
             var identityUser = new User
@@ -71,21 +76,21 @@ namespace Pacovallet.Api.Services
             {
                 var userId = identityUser.Id;
 
-                await _context.Categories.AddAsync(new Category
-                {
-                    UserId = identityUser.Id,
-                    Description = "Boleto Bancário",
-                    Purpose = CategoryTypeEnum.Expense,
-                    IsSystem = true
-                });
+                //await _context.Categories.AddAsync(new Category
+                //{
+                //    UserId = identityUser.Id,
+                //    Description = "Boleto Bancário",
+                //    Purpose = CategoryTypeEnum.Expense,
+                //    IsSystem = true
+                //});
 
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
 
-                return ServiceResponse<Guid>
-                        .Ok(userId);
+                return ServiceResponse<RegisterResponse>
+                        .Ok(new RegisterResponse { Id = userId });
             }
 
-            return ServiceResponse<Guid>
+            return ServiceResponse<RegisterResponse>
                     .Fail("Error while create User",
                         HttpStatusCode.Conflict);
         }

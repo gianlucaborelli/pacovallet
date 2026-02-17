@@ -1,28 +1,28 @@
 using Microsoft.AspNetCore.HttpOverrides;
 using Pacovallet.Api.Configurations;
-using Pacovallet.Api.Models;
 using Pacovallet.Api.Services;
-using Pacovallet.Api.Services.Factory;
-using Pacovallet.Api.Services.Strategy;
 using Pacovallet.Core.Extensions;
 using System.Text.Json.Serialization;
 using static Pacovallet.Api.Configurations.SwaggerConfig;
+
+// Hexagonal Architecture Extensions
+using Pacovallet.Infrastructure;
+using Pacovallet.FinancialImportService;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
+// Hexagonal Architecture Configuration
+builder.Services.AddHexagonalArchitecture();
+
+// Financial Import Service as Adapter
+builder.Services.AddFinancialImportService();
+
+// Legacy Services (only Identity remaining)
 builder.Services.AddScoped<IIdentityService, IdentityService>();
-builder.Services.AddScoped<IPersonService, PersonService>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<ITransactionService, TransactionService>();
-
-builder.Services.AddScoped<IInvoiceProcessingService, InvoiceProcessingService>();
-builder.Services.AddScoped<ICreditCardInvoiceProcessorFactory, CreditCardInvoiceProcessorFactory>();
-builder.Services.AddScoped<ICreditCardInvoiceProcessor, NubankCreditCardInvoiceProcessor>();
 
 builder.Services.AddIdentityConfiguration(builder.Configuration);
 
@@ -31,7 +31,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(MyAllowSpecificOrigins,
                           policy =>
                           {
-                              policy.AllowAnyOrigin() 
+                              policy.AllowAnyOrigin()
                                     .AllowAnyHeader()
                                     .AllowAnyMethod();
                           });
@@ -50,7 +50,7 @@ builder.Services
     });
 
 builder.Services.AddOpenApi(options =>
-{    
+{
     options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
 });
 
@@ -58,7 +58,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();    
+    app.MapOpenApi();
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/openapi/v1.json", "Test");

@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Pacovallet.Api.Models;
-using Pacovallet.Api.Models.Dto;
-using Pacovallet.Api.Services;
+using Pacovallet.Application.DTOs;
+using Pacovallet.Application.UseCases.Category;
+using Pacovallet.Domain.ValueObjects;
 using Pacovallet.Core.Controller;
 
 namespace Pacovallet.Api.Controllers
@@ -10,19 +10,33 @@ namespace Pacovallet.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class CategoryController(
-        ICategoryService service) : ControllerBase
+    public class CategoryController : ControllerBase
     {
-        private readonly ICategoryService _service = service;
+        private readonly GetCategoriesUseCase _getCategoriesUseCase;
+        private readonly CreateCategoryUseCase _createCategoryUseCase;
+        private readonly UpdateCategoryUseCase _updateCategoryUseCase;
+        private readonly DeleteCategoryUseCase _deleteCategoryUseCase;
+
+        public CategoryController(
+            GetCategoriesUseCase getCategoriesUseCase,
+            CreateCategoryUseCase createCategoryUseCase,
+            UpdateCategoryUseCase updateCategoryUseCase,
+            DeleteCategoryUseCase deleteCategoryUseCase)
+        {
+            _getCategoriesUseCase = getCategoriesUseCase;
+            _createCategoryUseCase = createCategoryUseCase;
+            _updateCategoryUseCase = updateCategoryUseCase;
+            _deleteCategoryUseCase = deleteCategoryUseCase;
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetCategories([FromQuery] string? categoryType)
         {
-            CategoryTypeEnum? parsedCategoryType = null;
+            CategoryType? parsedCategoryType = null;
 
             if (!string.IsNullOrWhiteSpace(categoryType))
             {
-                if (!Enum.TryParse<CategoryTypeEnum>(categoryType, ignoreCase: true, out var result))
+                if (!Enum.TryParse<CategoryType>(categoryType, ignoreCase: true, out var result))
                 {
                     return BadRequest($"Invalid categoryType: {categoryType}");
                 }
@@ -30,29 +44,29 @@ namespace Pacovallet.Api.Controllers
                 parsedCategoryType = result;
             }
 
-            var response = await _service.GetCategoryByPurposeAsync(parsedCategoryType);
+            var response = await _getCategoriesUseCase.ExecuteAsync(parsedCategoryType);
             return this.ToActionResult(response);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequest request)
         {
-            var response =  await _service.CreateCategoryAsync(request);
+            var response = await _createCategoryUseCase.ExecuteAsync(request);
             return this.ToActionResult(response);
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateCategory([FromBody] CategoryDto request)
         {
-            var response = await _service.UpdateCategoryAsync(request);
+            var response = await _updateCategoryUseCase.ExecuteAsync(request);
             return this.ToActionResult(response);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(Guid id)
         {
-            await _service.DeleteCategoryAsync(id);
-            return NoContent();
+            var response = await _deleteCategoryUseCase.ExecuteAsync(id);
+            return this.ToActionResult(response);
         }
     }
 }

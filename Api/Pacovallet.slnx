@@ -1,5 +1,8 @@
 <Solution>
   <Project Path="Pacovallet.Api/Pacovallet.Api.csproj" />
+  <Project Path="Pacovallet.Application/Pacovallet.Application.csproj" />
   <Project Path="Pacovallet.Core/Pacovallet.Core.csproj" />
+  <Project Path="Pacovallet.Domain/Pacovallet.Domain.csproj" />
   <Project Path="Pacovallet.FinancialImportService/Pacovallet.FinancialImportService.csproj" Id="cbf9ae03-8cd8-4f8e-a2c2-5c6d1c7f5ebc" />
+  <Project Path="Pacovallet.Infrastructure/Pacovallet.Infrastructure.csproj" />
 </Solution>

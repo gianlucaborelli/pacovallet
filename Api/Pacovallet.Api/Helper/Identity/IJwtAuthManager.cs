@@ -1,5 +1,5 @@
-﻿using Pacovallet.Api.Models;
-using System.ComponentModel.DataAnnotations;
+﻿
+using Pacovallet.Domain.Entities;
 using System.Security.Claims;
 
 namespace Pacovallet.Api.Helper.Identity
